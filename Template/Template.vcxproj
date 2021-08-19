@@ -275,6 +275,8 @@
     <None Include="..\README.md" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="..\Assets\sprites\Death Animation.png" />
+    <Image Include="..\Assets\sprites\Galactic Nova Nucleus.png" />
     <Image Include="..\Assets\sprites\UFO.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

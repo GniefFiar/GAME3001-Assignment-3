@@ -4,17 +4,17 @@
 Player::Player(): m_currentAnimationState(PLAYER_IDLE_RIGHT)
 {
 	TextureManager::Instance().loadSpriteSheet(
-		"../Assets/sprites/atlas.txt",
-		"../Assets/sprites/atlas.png", 
+		"../Assets/sprites/Dragoon.txt",
+		"../Assets/sprites/Dragoon.png", 
 		"spritesheet");
 
 	setSpriteSheet(TextureManager::Instance().getSpriteSheet("spritesheet"));
 	
 	// set frame width
-	setWidth(53);
+	setWidth(33);
 
 	// set frame height
-	setHeight(58);
+	setHeight(36);
 
 	getTransform()->position = glm::vec2(400.0f, 300.0f);
 	getRigidBody()->velocity = glm::vec2(0.0f, 0.0f);
@@ -77,20 +77,14 @@ void Player::m_buildAnimations()
 	Animation idleAnimation = Animation();
 
 	idleAnimation.name = "idle";
-	idleAnimation.frames.push_back(getSpriteSheet()->getFrame("megaman-idle-0"));
-	idleAnimation.frames.push_back(getSpriteSheet()->getFrame("megaman-idle-1"));
-	idleAnimation.frames.push_back(getSpriteSheet()->getFrame("megaman-idle-2"));
-	idleAnimation.frames.push_back(getSpriteSheet()->getFrame("megaman-idle-3"));
+	idleAnimation.frames.push_back(getSpriteSheet()->getFrame("Dragoon-idle-0"));
 
 	setAnimation(idleAnimation);
 
 	Animation runAnimation = Animation();
 
 	runAnimation.name = "run";
-	runAnimation.frames.push_back(getSpriteSheet()->getFrame("megaman-run-0"));
-	runAnimation.frames.push_back(getSpriteSheet()->getFrame("megaman-run-1"));
-	runAnimation.frames.push_back(getSpriteSheet()->getFrame("megaman-run-2"));
-	runAnimation.frames.push_back(getSpriteSheet()->getFrame("megaman-run-3"));
+	runAnimation.frames.push_back(getSpriteSheet()->getFrame("Dragoon-run-0"));
 
 	setAnimation(runAnimation);
 }

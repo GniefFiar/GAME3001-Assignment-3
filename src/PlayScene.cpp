@@ -34,7 +34,7 @@ void PlayScene::update()
 		CollisionManager::AABBCheck(m_pDragoon, m_pObstacle3) || CollisionManager::AABBCheck(m_pDragoon, m_pObstacle4) ||
 		CollisionManager::AABBCheck(m_pDragoon, m_pObstacle5) || CollisionManager::AABBCheck(m_pDragoon, m_pObstacle6))
 	{
-		m_pDragoon->m_speed = 0;
+		m_pDragoon->getRigidBody()->velocity = glm::vec2(0.0f, 0.0f);
 
 	}
 
@@ -65,22 +65,24 @@ void PlayScene::handleEvents()
 
 	if (EventManager::Instance().isKeyDown(SDL_SCANCODE_W))
 	{
-		m_pDragoon->getTransform()->position.y -= m_pDragoon->m_speed;
+		m_pDragoon->getTransform()->position -= glm::vec2(0.0f, 2.0f);
 	}
 
 	if (EventManager::Instance().isKeyDown(SDL_SCANCODE_A))
 	{
-		m_pDragoon->getTransform()->position.x -= m_pDragoon->m_speed;
+		m_pDragoon->setAnimationState(PLAYER_RUN_LEFT);
+		m_pDragoon->getTransform()->position -= glm::vec2(2.0f, 0.0f);
 	}
 
 	if (EventManager::Instance().isKeyDown(SDL_SCANCODE_S))
 	{
-		m_pDragoon->getTransform()->position.y += m_pDragoon->m_speed;
+		m_pDragoon->getTransform()->position += glm::vec2(0.0f, 2.0f);
 	}
 
 	if (EventManager::Instance().isKeyDown(SDL_SCANCODE_D))
 	{
-		m_pDragoon->getTransform()->position.x += m_pDragoon->m_speed;
+		m_pDragoon->setAnimationState(PLAYER_RUN_RIGHT);
+		m_pDragoon->getTransform()->position += glm::vec2(2.0f, 0.0f);
 	}
 
 	if (EventManager::Instance().isKeyDown(SDL_SCANCODE_K))
@@ -88,7 +90,7 @@ void PlayScene::handleEvents()
 		m_pShip->setHealth(-1);
 		if (m_pShip->getHealth() == 0)
 		{
-			TextureManager::Instance().removeTexture("UFO");
+			TextureManager::Instance().removeTexture("GNN");
 			SoundManager::Instance().allocateChannels(8);
 			SoundManager::Instance().load("../Assets/audio/EnemyDeath.wav", "EnemyDeath", SOUND_SFX);
 			SoundManager::Instance().playSound("EnemyDeath", 0);
@@ -102,6 +104,16 @@ void PlayScene::handleEvents()
 			SoundManager::Instance().playSound("EnemyHit", 0);
 			SoundManager::Instance().setSoundVolume(50);
 		}
+	}
+
+	if (EventManager::Instance().isKeyUp(SDL_SCANCODE_A))
+	{
+		m_pDragoon->setAnimationState(PLAYER_IDLE_LEFT);
+	}
+
+	if (EventManager::Instance().isKeyUp(SDL_SCANCODE_D))
+	{
+		m_pDragoon->setAnimationState(PLAYER_IDLE_RIGHT);
 	}
 }
 
@@ -119,7 +131,7 @@ void PlayScene::start()
 
 	// add the ship to the scene as a start point
 	m_pShip = new Ship();
-	m_pShip->getTransform()->position = glm::vec2(150.f, 300.f);
+	m_pShip->GameObject::getTransform()->position = glm::vec2(150.f, 300.f);
 	addChild(m_pShip, 3);
 
 	// add the Obstacle to the scene as a start point
@@ -154,7 +166,7 @@ void PlayScene::start()
 	m_pTarget->getTransform()->position = glm::vec2(600.f, 300.f);
 	addChild(m_pTarget);
 
-	m_pDragoon = new Plane();
+	m_pDragoon = new Player();
 	m_pDragoon->getTransform()->position = glm::vec2(500.f, 300.f);
 	addChild(m_pDragoon);
 
@@ -206,11 +218,11 @@ void PlayScene::GUI_Function()
 
 	ImGui::Separator();
 
-	static int shipPosition[] = { m_pShip->getTransform()->position.x, m_pShip->getTransform()->position.y };
+	static int shipPosition[] = { m_pShip->GameObject::getTransform()->position.x, m_pShip->GameObject::getTransform()->position.y };
 	if (ImGui::SliderInt2("Ship Position", shipPosition, 0, 800))
 	{
-		m_pShip->getTransform()->position.x = shipPosition[0];
-		m_pShip->getTransform()->position.y = shipPosition[1];
+		m_pShip->GameObject::getTransform()->position.x = shipPosition[0];
+		m_pShip->GameObject::getTransform()->position.y = shipPosition[1];
 
 		/*std::cout << "------------------------" << std::endl;
 		std::cout << decisionTree->MakeDecision() << std::endl;
@@ -290,7 +302,7 @@ void PlayScene::m_CheckPathNodeLOS()
 {
 	for (auto path_node : m_pGrid)
 	{
-		auto targetDirection = m_pShip->getTransform()->position - path_node->getTransform()->position;
+		auto targetDirection = m_pShip->GameObject::getTransform()->position - path_node->getTransform()->position;
 		auto normalizeDirection = Util::normalize(targetDirection);
 		path_node->setCurrentDirection(normalizeDirection);
 		m_CheckAgentLOS(path_node, m_pShip);

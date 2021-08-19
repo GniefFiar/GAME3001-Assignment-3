@@ -11,6 +11,7 @@
 #include "Target.h"
 #include "DecisionTree.h"
 #include "Plane.h"
+#include "Player.h"
 
 class PlayScene : public Scene
 {
@@ -42,7 +43,7 @@ private:
 	Obstacle* m_pObstacle4;
 	Obstacle* m_pObstacle5;
 	Obstacle* m_pObstacle6;
-	Plane* m_pDragoon;
+	Player* m_pDragoon;
 
 	// Other
 	std::vector<PathNode*> m_pGrid;
